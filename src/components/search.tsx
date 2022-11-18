@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { itemsInterface } from '../Interfaces/interface';
 import axios from 'axios'
+import Navbar from './navbar';
 
 
 
@@ -13,8 +14,10 @@ const Search = ()=>{
 
     const navigate = useNavigate()
     
-
-    const {id} = useParams();
+    const [found, setFound] = useSearchParams()
+    const itemFound = found.get('searchedProduct')
+    
+    // const {id} = useParams();
     const [searchitem, setSearchitem] = useState<itemsInterface[]>([])
 
     // const handleSearch = (id:string)=>{
@@ -26,11 +29,13 @@ const Search = ()=>{
     // }
 
     useEffect(()=>{
+    
         axios.get("http://localhost:3001/products").
         then((response)=>{
             if(response){
-                setSearchitem(response.data.filter((perSearched:itemsInterface)=>perSearched.title.toLowerCase().includes(id!.toLowerCase())))
-                setProducts(response.data)
+                setSearchitem(response.data.filter((perSearched:itemsInterface)=>perSearched.title.toLowerCase().includes(itemFound!.toLowerCase())))
+                    setProducts(response.data)
+         
                 // console.log(response.data);         
                 
             }
@@ -43,11 +48,13 @@ const Search = ()=>{
    
 
     return (
-        <div className='flex justify-center items-center w-full h-full rounded-xl flex'>
-            <div className='w-5/6 h-full  rounded-xl shadow-2xl px-10 fixed bg-white  top-10 bottom-30 left-20 ml-24 overflow-y-scroll'>
-                <h1 className='text-red-400 text-4xl italic'>Searching results... {id}</h1>
+        <div>
+            <Navbar products={[]} />
+            <div className='flex justify-center items-center w-full h-full rounded-xl'>
+            <div className='w-11/12 h-full  rounded-xl shadow-2xl px-10 fixed bg-white top-32 bottom-30 left-12 right-4 overflow-y-scroll'>
+                <h1 className='text-red-400 text-4xl italic'>Searching results... {itemFound}</h1>
                 <div className='w-full h-full  justify-center items-center'>
-    
+                        
                         {searchitem.map((item)=>{
                             return (
                              <div className='w-full '>
@@ -77,6 +84,7 @@ const Search = ()=>{
             
             
 
+        </div>
         </div>
     );
 }
