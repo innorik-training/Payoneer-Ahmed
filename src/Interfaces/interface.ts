@@ -6,6 +6,7 @@ export interface itemsInterface {
     price : number,
     description : string,
     url : string,
+    itemCate : string,
     
 }
 
@@ -16,4 +17,9 @@ export type AddToCart_btn={
 export interface mainState {
     notification : number,
     Orderitem: itemsInterface[]
+    
+}
+
+export interface products {
+    Allitems : itemsInterface[]
 }
